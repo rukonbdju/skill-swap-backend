@@ -1,5 +1,8 @@
-import * as repo from './user.repository';
+import { db } from "../../config/db.config";
 
-export const getProfile = (userId: number) => {
-    return repo.findUserById(userId);
+
+
+export const getProfile = async (userId: number) => {
+    const users = await db.query.users.findMany()
+    return users;
 };

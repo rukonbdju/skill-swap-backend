@@ -7,6 +7,11 @@
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
-        "baseUrl": ".",
-    }
+        "baseUrl": "src"
+    },
+    "exclude": [
+        "drizzle.config.ts", // ✅ exclude this file
+        "drizzle", // ✅ optional: exclude generated migrations
+        "node_modules" // always exclude node_modules
+    ]
 }
