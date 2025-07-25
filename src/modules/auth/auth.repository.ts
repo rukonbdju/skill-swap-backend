@@ -1,18 +1,33 @@
-import { pool } from "../../config/db.config";
+import { eq } from 'drizzle-orm';
+import { db } from '../../config/db.config';
+import { users } from '../../schema';
 
+// 1. Find user by email
 export const findUserByEmail = async (email: string) => {
-    const res = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    return res.rows[0];
-};
-export const findUserById = async (userId: string) => {
-    const res = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
-    return res.rows[0];
+    const res = await db.query.users.findFirst({
+        where: eq(users.email, email),
+    });
+    console.log("findUserByEmail", res);
+    return res;
 };
 
-export const createUser = async (userInfo: { name: string, email: string, passwordHash: string }) => {
-    const res = await pool.query(
-        `INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING *`,
-        [userInfo, userInfo.email, userInfo.passwordHash]
-    );
-    return res.rows[0];
+// 2. Find user by ID
+export const findUserById = async (userId: number) => {
+    const res = await db.query.users.findFirst({
+        where: eq(users.id, userId),
+    });
+    return res;
 };
+
+// 3. Create new user
+export const createUser = async (userInfo: {
+    name: string;
+    email: string;
+    password: string;
+}) => {
+    const res = await db.insert(users)
+        .values(userInfo)
+        .returning();
+    return res[0]; // returning is always an array
+};
+

@@ -23,13 +23,14 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         });
         res.status(200).json({ success: true, data: user });
     } catch (err: any) {
-        next()
+        next(err)
     }
 };
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, password } = req.body
+        console.log(req.body)
         const user = await authService.login({ email, password });
         const { accessToken, refreshToken } = generateToken({ userId: user.id })
         res.cookie('accessToken', accessToken, {
@@ -47,7 +48,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         });
         res.status(200).json({ success: true, data: user });
     } catch (err: any) {
-        next()
+        next(err)
     }
 };
 
